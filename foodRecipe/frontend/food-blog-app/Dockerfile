@@ -1,3 +1,4 @@
+
 FROM node:20-alpine AS builder
 
 WORKDIR /app
@@ -7,6 +8,9 @@ COPY package*.json ./
 RUN npm install && chmod -R 777 /app/node_modules/.bin
 
 COPY . .
+
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 
 RUN rm -rf node_modules && npm install && npm run build
 

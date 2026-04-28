@@ -1,3 +1,4 @@
+import API_URL from '../config';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import foodImg from '../assets/foodRecipe.png';
@@ -20,7 +21,7 @@ export default function RecipeItems() {
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/recipe');
+                const response = await axios.get(`${API_URL}/recipe`);
                 setAllRecipes(response.data); // Charge les données
             } catch (error) {
                 console.error("Erreur lors du chargement des recettes :", error);
@@ -50,7 +51,7 @@ export default function RecipeItems() {
 
     // Supprimer une recette
     const onDelete = async (id) => {
-        await axios.delete(`http://localhost:5000/recipe/${id}`);
+        await axios.delete(`${API_URL}/recipe/${id}`);
         setAllRecipes((prev) => prev.filter((recipe) => recipe._id !== id));
         const updatedFavorites = favItems.filter((recipe) => recipe._id !== id);
         setFavItems(updatedFavorites);
@@ -63,7 +64,7 @@ const handlePayment = async (recipe) => {
     const userId = JSON.parse(localStorage.getItem("user"))?.id; // Récupérer l'ID utilisateur
 
     try {
-        const response = await axios.post('http://localhost:5000/api/payment/create-checkout-session', {
+        const response = await axios.post(`${API_URL}/api/payment/create-checkout-session`, {
             title: recipe.title,
             price: recipe.price || 10,
             userId: userId, // Transmettre l'ID utilisateur
@@ -86,7 +87,7 @@ const handlePayment = async (recipe) => {
                 recipesToDisplay.map((item, index) => (
                     <div key={index} className="card" onDoubleClick={() => navigate(`/recipe/${item._id}`)}>
                         <img
-                            src={item.coverImage ? `http://localhost:5000/images/${item.coverImage}` : foodImg}
+                            src={item.coverImage ? `${API_URL}/images/${item.coverImage}` : foodImg}
                             width="120px"
                             height="100px"
                             alt={item.title}
